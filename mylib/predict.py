@@ -15,12 +15,12 @@ def resize_image(image, width: int, height: int):
 
 
 if __name__ == "__main__":
-    image = Image.open("samples/hamis.jpg")
-    image = resize_image(image, 32, 32)
+    img = Image.open("samples/hamis.jpg")
+    img = resize_image(img, 32, 32)
 
     random.seed(1)
-    print(predict_image(image))
+    print(predict_image(img))
     random.seed(2)
-    print(predict_image(image))
+    print(predict_image(img))
     random.seed(3)
-    print(predict_image(image))
+    print(predict_image(img))

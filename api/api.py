@@ -4,11 +4,9 @@ from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
 from mylib.predict import predict_image, resize_image
 from PIL import Image
 import io
-from typing import Annotated
 
 # Create an instance of FastAPI
 app = FastAPI(
@@ -36,21 +34,24 @@ async def predict(data: UploadFile = File(...)):
     # op = data.operation.lower()
     file = await data.read()
     image = Image.open(io.BytesIO(file))
-    image.verify()
 
     result = predict_image(image)
     return {"result": result}
 
 
 @app.post("/resize")
-async def resize(width: int = Form(), height: int = Form(), data: UploadFile = File(...)):
+async def resize(
+    width: int = Form(), height: int = Form(), data: UploadFile = File(...)
+):
     """
     It performs an arithmetical operation according to the input parameters.
     """
 
+    if width <= 0 or height <= 0:
+        return HTTPException(500, "Invalid width or height")
+
     file = await data.read()
     image = Image.open(io.BytesIO(file))
-    #image.verify()
 
     result = resize_image(image, width, height)
     return {"result": result}
